@@ -1,11 +1,14 @@
+from django.db.models import fields
 from rest_framework import serializers
 from .models import Room, Booking
+from rest_framework import serializers
+from django.contrib.auth.models import User
 
 
 class RoomListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Room
-        fields = '__all__'
+        fields = ['number']
 
     # def to_representation(self, instance):
     #     rep = super().to_representation(instance)
@@ -13,15 +16,20 @@ class RoomListSerializer(serializers.ModelSerializer):
     #     return rep
 
 class BookingListSerializer(serializers.ModelSerializer):
+    username = serializers.ReadOnlyField(source="user.username")
+    roomno = RoomListSerializer(many=False, read_only=True)
+
+
     class Meta:
         model = Booking
+        # fields = ['id','username', 'user','room','roomno', 'check_in', 'check_out']
         fields = '__all__'
 
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        rep['room'] = RoomListSerializer(instance.room).data
+        return rep
 
-
-
-from rest_framework import serializers
-from django.contrib.auth.models import User
 
 
 class RegisterSerializer(serializers.ModelSerializer):

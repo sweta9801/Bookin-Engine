@@ -7,7 +7,7 @@ from .views import RegisterView, LoginView
 
 # Create a router and register our viewsets with it.
 router = DefaultRouter()
-router.register('room_list/', views.RoomList)
+router.register('room_list', views.RoomList)
 # router.register(r'room_list/', RoomList, basename='RoomList')
 router.register('booking', views.BookingList)
 
